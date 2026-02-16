@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sheebs' Portfolio</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+
+    body{
+      font-family:'Inter',sans-serif;
+      background:#020617;
+      color:white;
+      overflow-x:hidden;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      padding:40px 16px;
+    }
+
+    canvas#bg{
+      position:fixed;
+      top:0;left:0;
+      width:100%;height:100%;
+      z-index:-1;
+    }
+
+    header{
+      font-family:'Orbitron',sans-serif;
+      font-size:48px;
+      letter-spacing:3px;
+      text-shadow:0 0 20px #38bdf8;
+      margin-bottom:30px;
+      text-align:center;
+    }
+
+    .container{
+      max-width:1000px;
+      width:100%;
+      background:rgba(255,255,255,0.05);
+      border-radius:24px;
+      padding:24px;
+      backdrop-filter:blur(14px);
+      box-shadow:0 0 60px rgba(0,0,0,0.6);
+    }
+
+    .video-wrapper{
+      position:relative;
+      padding-bottom:56.25%;
+      margin-bottom:30px;
+      border-radius:16px;
+      overflow:hidden;
+    }
+    .video-wrapper iframe{
+      position:absolute;width:100%;height:100%;border:none;
+    }
+
+    .tabs{display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap}
+    .tab-btn{
+      background:rgba(255,255,255,0.1);
+      border:none;
+      padding:10px 18px;
+      border-radius:999px;
+      color:white;
+      cursor:pointer;
+      font-weight:600;
+      transition:.2s;
+    }
+    .tab-btn.active,.tab-btn:hover{
+      background:#38bdf8;
+      color:black;
+    }
+
+    .tab-content{display:none}
+    .tab-content.active{display:block;animation:fade .3s}
+
+    @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1}}
+
+    .project-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+      gap:16px;
+      margin-bottom:20px;
+    }
+
+    .project-card{
+      background:rgba(0,0,0,0.4);
+      border-radius:14px;
+      padding:10px;
+      cursor:pointer;
+      transition:.2s;
+      border:1px solid rgba(255,255,255,0.1);
+    }
+    .project-card:hover{transform:scale(1.03);box-shadow:0 0 20px #38bdf8}
+
+    .project-card img{
+      width:100%;
+      border-radius:10px;
+      margin-bottom:8px;
+    }
+
+    .project-title{text-align:center;font-weight:600}
+
+    .project-details{
+      background:rgba(0,0,0,0.5);
+      border-radius:14px;
+      padding:16px;
+      line-height:1.6;
+    }
+
+    footer{margin-top:20px;opacity:.6}
+  </style>
+</head>
+
+<body>
+  <canvas id="bg"></canvas>
+  <header>Sheebs' Game Dev Portfolio</header>
+
+  <div class="container">
+    <div class="video-wrapper">
+      <iframe src="https://www.youtube.com/embed/26YQbFymnPw" allowfullscreen></iframe>
+    </div>
+
+    <div class="tabs">
+      <button class="tab-btn active" onclick="showTab('projects')">Projects</button>
+      <button class="tab-btn" onclick="showTab('about')">About</button>
+      <!--<button class="tab-btn" onclick="showTab('contact')">Contact</button>-->
+    </div>
+
+    <div id="projects" class="tab-content active">
+      <div class="project-grid">
+        <div class="project-card" onclick="showProject('therig')">
+          <img src="./images/TheRigThumbnail.png" />
+          <div class="project-title">The Rig</div>
+        </div>
+        <div class="project-card" onclick="showProject('dragon')">
+          <img src="./images/TwinDragonThumbnail.png" />
+          <div class="project-title">Project TwinDragon</div>
+        </div>
+        <div class="project-card" onclick="showProject('dreambound')">
+          <img src="./images/DreamboundThumbnail.png" />
+          <div class="project-title">Dreambound</div>
+        </div>
+      </div>
+
+      <div id="projectDetails" class="project-details">
+        <h3>Select a project to see details</h3>
+        <ul><li></li></ul>
+      </div>
+    </div>
+
+    <div id="about" class="tab-content">
+      <h3>About Me</h3>
+      <p>I'm a software engineer with 15+ years of experience in software development. This video highlights my recent work with networking,
+        gameplay systems, AI, and more. </p>
+    </div>
+
+    <!--<div id="contact" class="tab-content">
+      <h3>Contact</h3>
+      <p>Email:</p>
+      <p>Twitter / GitHub / LinkedIn</p>
+    </div>
+  </div>-->
+
+  <!--<footer>© 2026 Your Studio</footer>-->
+
+  <script>
+    function showTab(id){
+      document.querySelectorAll('.tab-content').forEach(x=>x.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(x=>x.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      event.target.classList.add('active');
+    }
+
+    const projects={
+      therig:[
+        'A networked co-op shooter made using unreal engine - 5 C++ and Blueprints',
+        'Lightweight networked physics solution for ragdolling',
+        'Handled all coding for AI, animation, gameplay, networking, physics, GAS'
+      ],
+      dragon:[
+        'A networked co-op survivor-like in UE5',
+        'Created custom rollback netcode inside of Unreal',
+        '300+ actor performance optimizations (ISM, Vertex animations, aggregate ticking, spatial-grid logic)',
+        'Custom editor enhancements for FixedPoint library'
+      ],
+      dreambound:[
+        'A co-op asymmetric puzzle game',
+        'Released on Itch.io! https://sheebslol.itch.io/dreambound',
+        'Created NAT traversal system with a launched AWS service and custom Unreal NetDriver"
+      ]
+    }
+
+    function showProject(key){
+      const list=projects[key]||['Add your bullet points here'];
+      document.getElementById('projectDetails').innerHTML=
+        `<h3>${key.toUpperCase()}</h3><ul>${list.map(x=>`<li>${x}</li>`).join('')}</ul>`;
+    }
+
+    const canvas=document.getElementById('bg');
+    const ctx=canvas.getContext('2d');
+    let particles=[];
+    function resize(){canvas.width=window.innerWidth;canvas.height=window.innerHeight}
+    window.onresize=resize;resize();
+    for(let i=0;i<80;i++)particles.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,vx:(Math.random()-0.5)*0.3,vy:(Math.random()-0.5)*0.3});
+    function loop(){
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      ctx.fillStyle='rgba(56,189,248,0.5)';
+      particles.forEach(p=>{
+        p.x+=p.vx;p.y+=p.vy;
+        if(p.x<0||p.x>canvas.width)p.vx*=-1;
+        if(p.y<0||p.y>canvas.height)p.vy*=-1;
+        ctx.beginPath();ctx.arc(p.x,p.y,1.5,0,Math.PI*2);ctx.fill();
+      });
+      requestAnimationFrame(loop);
+    }
+    loop();
+  </script>
+</body>
+</html>
