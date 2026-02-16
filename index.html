@@ -131,16 +131,16 @@
     </div>
 
     <div id="projects" class="tab-content active">
-      <div class="project-grid"
-        <div class="project-card" data-project="therig">
+      <div class="project-grid">
+        <div class="project-card" data-project="The Rig">
           <img src="./images/TheRigThumbnail.png" />
           <div class="project-title">The Rig</div>
         </div>
-        <div class="project-card" data-project="dragon">
+        <div class="project-card" data-project="Project TwinDragon">
           <img src="./images/TwinDragonThumbnail.png" />
           <div class="project-title">Project TwinDragon</div>
         </div>
-        <div class="project-card" data-project="dreambound">
+        <div class="project-card" data-project="Dreambound">
           <img src="./images/DreamboundThumbnail.png" />
           <div class="project-title">Dreambound</div>
         </div>
@@ -162,51 +162,54 @@
       <h3>Contact</h3>
       <p>Email:</p>
       <p>Twitter / GitHub / LinkedIn</p>
-    </div>
-  </div>-->
+    </div>-->
+  </div>
 
   <!--<footer>© 2026 Your Studio</footer>-->
 
   <script>
-    document.querySelectorAll('.tab-btn').forEach(btn=>{
-      btn.addEventListener('click', ()=>{
-        const id = btn.getAttribute('data-tab');
-    
-        document.querySelectorAll('.tab-content')
-          .forEach(x=>x.classList.remove('active'));
-    
-        document.querySelectorAll('.tab-btn')
-          .forEach(x=>x.classList.remove('active'));
-    
-        document.getElementById(id).classList.add('active');
-        btn.classList.add('active');
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('.tab-btn').forEach(btn=>{
+        btn.addEventListener('click', ()=>{
+          const id = btn.getAttribute('data-tab');
+      
+          document.querySelectorAll('.tab-content')
+            .forEach(x=>x.classList.remove('active'));
+      
+          document.querySelectorAll('.tab-btn')
+            .forEach(x=>x.classList.remove('active'));
+      
+          document.getElementById(id).classList.add('active');
+          btn.classList.add('active');
+        });
       });
     });
 
-    /* Hook up click handlers */
-    document.querySelectorAll(".project-card").forEach(card => {
-      card.addEventListener("click", () => {
-        const key = card.dataset.project;
-        showProject(key);
+      /* Hook up click handlers */
+      document.querySelectorAll(".project-card").forEach(card => {
+        card.addEventListener("click", () => {
+          const key = card.getAttribute('data-project');
+          showProject(key);
+        });
       });
-    });
+    
 
     const projects={
-      therig:[
+      "The Rig":[
         'A networked co-op shooter made using unreal engine - 5 C++ and Blueprints',
         'Lightweight networked physics solution for ragdolling',
         'Handled all coding for AI, animation, gameplay, networking, physics, GAS'
       ],
-      dragon:[
+      "Project TwinDragon":[
         'A networked co-op survivor-like in UE5',
         'Created custom rollback netcode inside of Unreal',
         '300+ actor performance optimizations (ISM, Vertex animations, aggregate ticking, spatial-grid logic)',
         'Custom editor enhancements for FixedPoint library'
       ],
-      dreambound:[
+      "Dreambound":[
         'A co-op asymmetric puzzle game',
         'Released on Itch.io! https://sheebslol.itch.io/dreambound',
-        'Created NAT traversal system with a launched AWS service and custom Unreal NetDriver"
+        'Created NAT traversal system with a launched AWS service and custom Unreal NetDriver'
       ]
     }
 
@@ -215,19 +218,7 @@
       document.getElementById('projectDetails').innerHTML=
         `<h3>${key.toUpperCase()}</h3><ul>${list.map(x=>`<li>${x}</li>`).join('')}</ul>`;
     }
-
-    function showProject(key){
-      const p = projects[key];
-      if(!p) return;
     
-      document.getElementById("projectDetails").innerHTML =
-        `<h3>${p.title}</h3>
-         <ul>${p.bullets.map(b => `<li>${b}</li>`).join("")}</ul>`;
-    }
-    
-    
-    
-
     const canvas=document.getElementById('bg');
     const ctx=canvas.getContext('2d');
     let particles=[];
