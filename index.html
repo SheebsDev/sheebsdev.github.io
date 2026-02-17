@@ -1,251 +1,429 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sheebs' Portfolio</title>
-
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
-
+  <meta name="description" content="Game development portfolio featuring networked gameplay, systems design, and performance engineering.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Sora:wght@500;700&display=swap" rel="stylesheet">
   <style>
-    *{box-sizing:border-box;margin:0;padding:0}
-
-    body{
-      font-family:'Inter',sans-serif;
-      background:#020617;
-      color:white;
-      overflow-x:hidden;
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      padding:40px 16px;
+    @font-face {
+      font-family: "Hemi Head Local";
+      src: url("./fonts/HemiHead-Bold.otf") format("opentype");
+      font-display: swap;
     }
 
-    canvas#bg{
-      position:fixed;
-      top:0;left:0;
-      width:100%;height:100%;
-      z-index:-1;
+    :root {
+      --bg-top: #060f1d;
+      --bg-bottom: #111b31;
+      --panel: rgba(8, 14, 30, 0.75);
+      --panel-strong: rgba(10, 17, 36, 0.92);
+      --text: #ecf2ff;
+      --muted: #93a5cb;
+      --accent: #67d6ff;
+      --accent-strong: #00b8f4;
+      --line: rgba(148, 188, 255, 0.22);
+      --radius-lg: 24px;
+      --radius-md: 14px;
+      --shadow: 0 25px 90px rgba(0, 0, 0, 0.45);
     }
 
-    header{
-      font-family:'Orbitron',sans-serif;
-      font-size:48px;
-      letter-spacing:3px;
-      text-shadow:0 0 20px #38bdf8;
-      margin-bottom:30px;
-      text-align:center;
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
 
-    .container{
-      max-width:1000px;
-      width:100%;
-      background:rgba(255,255,255,0.05);
-      border-radius:24px;
-      padding:24px;
-      backdrop-filter:blur(14px);
-      box-shadow:0 0 60px rgba(0,0,0,0.6);
+    html,
+    body {
+      min-height: 100%;
     }
 
-    .video-wrapper{
-      position:relative;
-      padding-bottom:56.25%;
-      margin-bottom:30px;
-      border-radius:16px;
-      overflow:hidden;
-    }
-    .video-wrapper iframe{
-      position:absolute;width:100%;height:100%;border:none;
+    body {
+      position: relative;
+      background: radial-gradient(circle at 15% 15%, #102445 0%, var(--bg-top) 42%, var(--bg-bottom) 100%);
+      color: var(--text);
+      font-family: "Space Grotesk", sans-serif;
+      overflow-x: hidden;
+      padding: 40px 16px 60px;
     }
 
-    .tabs{display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap}
-    .tab-btn{
-      background:rgba(255,255,255,0.1);
-      border:none;
-      padding:10px 18px;
-      border-radius:999px;
-      color:white;
-      cursor:pointer;
-      font-weight:600;
-      transition:.2s;
-    }
-    .tab-btn.active,.tab-btn:hover{
-      background:#38bdf8;
-      color:black;
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: -3;
+      background-image: linear-gradient(rgba(167, 196, 255, 0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(167, 196, 255, 0.08) 1px, transparent 1px);
+      background-size: 46px 46px;
+      mask-image: radial-gradient(circle at center, black 30%, transparent 80%);
     }
 
-    .tab-content{display:none}
-    .tab-content.active{display:block;animation:fade .3s}
-
-    @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1}}
-
-    .project-grid{
-      display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
-      gap:16px;
-      margin-bottom:20px;
+    canvas#bg {
+      position: fixed;
+      inset: 0;
+      z-index: -2;
     }
 
-    .project-card{
-      background:rgba(0,0,0,0.4);
-      border-radius:14px;
-      padding:10px;
-      cursor:pointer;
-      transition:.2s;
-      border:1px solid rgba(255,255,255,0.1);
-
-      display: flex;
-      flex-direction: column;
+    .page {
+      max-width: 1040px;
+      margin: 0 auto;
+      display: grid;
+      gap: 22px;
     }
-    .project-card:hover{transform:scale(1.03);box-shadow:0 0 20px #38bdf8}
 
-    .project-card img{
-      width:100%;
-      border-radius:10px;
-      margin-bottom:8px;
+    .hero {
+      background: linear-gradient(140deg, rgba(103, 214, 255, 0.12), rgba(103, 214, 255, 0.01) 50%), var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow);
+      padding: 28px;
+    }
+
+    h1 {
+      font-size: clamp(30px, 5vw, 56px);
+      line-height: 1.06;
+      font-family: "Hemi Head Local", "Sora", sans-serif;
+      text-wrap: balance;
+    }
+
+    .hero-subtitle {
+      margin-top: 16px;
+      max-width: 70ch;
+      color: var(--muted);
+      line-height: 1.65;
+      font-size: 1.04rem;
+    }
+
+    .main-panel {
+      background: var(--panel-strong);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .video-wrapper {
+      position: relative;
+      border-radius: 18px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      padding-bottom: 56.25%;
+      box-shadow: 0 18px 35px rgba(0, 0, 0, 0.34);
+    }
+
+    .video-wrapper iframe {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      inset: 0;
+      border: none;
+    }
+
+    .project-grid {
+      margin-top: 20px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+
+    .project-card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      background: rgba(255, 255, 255, 0.02);
+      padding: 9px;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+      color: inherit;
+      text-align: left;
+    }
+
+    .project-card:hover,
+    .project-card:focus-visible,
+    .project-card.active {
+      transform: translateY(-4px);
+      border-color: rgba(103, 214, 255, 0.65);
+      box-shadow: 0 14px 35px rgba(0, 184, 244, 0.22);
+      outline: none;
+    }
+
+    .project-card img {
+      width: 100%;
+      border-radius: 10px;
+      aspect-ratio: 16 / 10;
       object-fit: cover;
+      display: block;
     }
 
-    .project-title{
-      text-align:center;
-      font-weight:600;
-      margin-top: auto;
+    .project-title {
+      font-family: "Sora", sans-serif;
+      margin-top: 10px;
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 0.01em;
       text-align: center;
     }
 
-    .project-details{
-      background:rgba(0,0,0,0.5);
-      border-radius:14px;
-      padding:16px;
-      line-height:1.6;
+    .project-details {
+      margin-top: 4px;
+      background: rgba(0, 0, 0, 0.34);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 16px;
     }
 
-    footer{margin-top:20px;opacity:.6}
+    .section-title {
+      font-family: "Hemi Head Local", "Sora", sans-serif;
+      font-size: 1.5rem;
+      letter-spacing: -0.02em;
+    }
+
+    .section-projects {
+      margin-top: 40px;
+    }
+
+    .project-details h3 {
+      font-family: "Sora", sans-serif;
+      font-size: 1.08rem;
+      margin-bottom: 10px;
+      letter-spacing: 0.03em;
+    }
+
+    .project-details ul {
+      margin-left: 19px;
+      color: #c9d7f6;
+      line-height: 1.7;
+    }
+
+    .about-contact {
+      margin-top: 24px;
+      display: grid;
+      grid-template-columns: 1.3fr 1fr;
+      gap: 14px;
+    }
+
+    .about-card {
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 18px;
+      color: #d9e6ff;
+      line-height: 1.7;
+    }
+
+    .about-card h3,
+    .contact-card h3 {
+      font-family: "Sora", sans-serif;
+      letter-spacing: -0.02em;
+      margin-bottom: 10px;
+    }
+
+    .skills-row {
+      margin-top: 14px;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .skill-pill {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 6px 10px;
+      color: #cfe2ff;
+      font-size: 0.88rem;
+      background: rgba(103, 214, 255, 0.08);
+    }
+
+    .contact-card {
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 18px;
+      line-height: 1.8;
+    }
+
+    .contact-card a {
+      color: var(--accent);
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+    }
+
+    .contact-card a:hover {
+      border-bottom-color: var(--accent);
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 860px) {
+      body {
+        padding-top: 22px;
+      }
+
+      .hero,
+      .main-panel {
+        padding: 18px;
+      }
+
+      .project-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .about-contact {
+        grid-template-columns: 1fr;
+      }
+    }
   </style>
 </head>
-
 <body>
   <canvas id="bg"></canvas>
-  <header>Sheebs' Game Dev Portfolio</header>
 
-  <div class="container">
-    <div class="video-wrapper">
-      <iframe src="https://www.youtube.com/embed/26YQbFymnPw" allowfullscreen></iframe>
-    </div>
+  <main class="page">
+    <section class="hero">
+      <h1>Sheebs' Game Development Portfolio</h1>
+      <p class="hero-subtitle">Creating co-op experiences in Unreal Engine 5 with a focus on gameplay systems, networking, performance optimizations, and AI</p>
+    </section>
 
-    <div class="tabs">
-      <button class="tab-btn active" data-tab="projects">Projects</button>
-      <button class="tab-btn" data-tab="about">About</button>
-      <!--<button class="tab-btn" onclick="showTab('contact')">Contact</button>-->
-    </div>
-
-    <div id="projects" class="tab-content active">
-      <div class="project-grid">
-        <div class="project-card" data-project="The Rig">
-          <img src="./images/TheRigThumbnail.png" />
-          <div class="project-title">The Rig</div>
-        </div>
-        <div class="project-card" data-project="Project TwinDragon">
-          <img src="./images/TwinDragonThumbnail.png" />
-          <div class="project-title">Project TwinDragon</div>
-        </div>
-        <div class="project-card" data-project="Dreambound">
-          <img src="./images/DreamboundThumbnail.png" />
-          <div class="project-title">Dreambound</div>
-        </div>
+    <section class="main-panel">
+      <div class="video-wrapper">
+        <iframe src="https://www.youtube.com/embed/g9DB-x6I0Wo" title="Game development portfolio reel" allowfullscreen></iframe>
       </div>
 
-      <div id="projectDetails" class="project-details">
-        <h3>Select a project to see details</h3>
-        <ul><li></li></ul>
-      </div>
-    </div>
+      <section id="projects" class="section-projects">
+        <h2 class="section-title">Projects</h2>
+        <div class="project-grid">
+          <button class="project-card active" type="button" data-project="The Rig">
+            <img src="./images/TheRigThumbnail.png" alt="The Rig project thumbnail">
+            <div class="project-title">The Rig</div>
+          </button>
+          <button class="project-card" type="button" data-project="Project TwinDragon">
+            <img src="./images/TwinDragonThumbnail.png" alt="Project TwinDragon thumbnail">
+            <div class="project-title">Project TwinDragon</div>
+          </button>
+          <button class="project-card" type="button" data-project="Dreambound">
+            <img src="./images/DreamboundThumbnail.png" alt="Dreambound project thumbnail">
+            <div class="project-title">Dreambound</div>
+          </button>
+        </div>
 
-    <div id="about" class="tab-content">
-      <h3>About Me</h3>
-      <p>I'm a software engineer with 15+ years of experience in software development. This video highlights my recent work with networking,
-        gameplay systems, AI, and more. </p>
-    </div>
+        <article id="projectDetails" class="project-details">
+          <h3>The Rig</h3>
+          <ul>
+            <li>A co-op shooter built in Unreal Engine 5 with C++ and Blueprints.</li>
+            <li>Implemented lightweight networked simulated ragdoll behavior</li>
+            <li>Owned AI, animation, gameplay, networking, physics, and GAS systems.</li>
+          </ul>
+        </article>
+      </section>
 
-    <!--<div id="contact" class="tab-content">
-      <h3>Contact</h3>
-      <p>Email:</p>
-      <p>Twitter / GitHub / LinkedIn</p>
-    </div>-->
-  </div>
+      <section class="about-contact">
+        <article class="about-card">
+          <h3>About Me</h3>
+          <p>I'm a software engineer with 15+ years of development experience. This page highlights my recent work across gameplay systems, AI, and large-scale optimization in multiplayer environments.</p>
+          <div class="skills-row">
+            <span class="skill-pill">Unreal Engine 5</span>
+            <span class="skill-pill">C++</span>
+            <span class="skill-pill">C#</span>
+            <span class="skill-pill">Java</span>
+            <span class="skill-pill">Javascript</span>
+            <span class="skill-pill">Obj-C</span>
+          </div>
+        </article>
 
-  <!--<footer>© 2026 Your Studio</footer>-->
+        <article class="contact-card">
+          <h3>Contact Me</h3>
+          <p>Email: <a href="mailto:lolsheebs@gmail.com">lolsheebs@gmail.com</a></p>
+        </article>
+      </section>
+    </section>
+
+    <p class="footer">© 2026 Sheebs</p>
+  </main>
 
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      document.querySelectorAll('.tab-btn').forEach(btn=>{
-        btn.addEventListener('click', ()=>{
-          const id = btn.getAttribute('data-tab');
-      
-          document.querySelectorAll('.tab-content')
-            .forEach(x=>x.classList.remove('active'));
-      
-          document.querySelectorAll('.tab-btn')
-            .forEach(x=>x.classList.remove('active'));
-      
-          document.getElementById(id).classList.add('active');
-          btn.classList.add('active');
-        });
-      });
+    const projects = {
+      "The Rig": [
+        "An online co-op shooter built in Unreal Engine 5 with C++ and Blueprints.",
+        "Implemented lightweight networked physics for reliable ragdoll behavior.",
+        "Owned AI, animation, gameplay, networking, physics, and GAS systems."
+      ],
+      "Project TwinDragon": [
+        "An online co-op survivor-like game in UE5.",
+        "Built custom rollback netcode for deterministic multiplayer behavior.",
+        "Delivered 300+ actor performance optimizations using ISM, vertex animation, aggregate ticking, and spatial-grid logic.",
+        "Created custom editor enhancements for the FixedPoint library."
+      ],
+      "Dreambound": [
+        "A co-op asymmetric puzzle game.",
+        "Released on Itch.io: https://sheebslol.itch.io/dreambound",
+        "Created NAT traversal via an AWS-backed service and custom Unreal NetDriver."
+      ]
+    };
+
+    const projectCards = document.querySelectorAll(".project-card");
+    const projectDetails = document.getElementById("projectDetails");
+
+    function showProject(projectName) {
+      const details = projects[projectName] || ["Add project notes here."];
+      projectDetails.innerHTML = "<h3>" + projectName + "</h3><ul>" + details.map((line) => "<li>" + line + "</li>").join("") + "</ul>";
+      projectCards.forEach((card) => card.classList.toggle("active", card.dataset.project === projectName));
+    }
+
+    projectCards.forEach((card) => {
+      card.addEventListener("click", () => showProject(card.dataset.project));
     });
 
-      /* Hook up click handlers */
-      document.querySelectorAll(".project-card").forEach(card => {
-        card.addEventListener("click", () => {
-          const key = card.getAttribute('data-project');
-          showProject(key);
+    const canvas = document.getElementById("bg");
+    const ctx = canvas.getContext("2d");
+    const particles = [];
+    const particleCount = 90;
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+
+    function seedParticles() {
+      particles.length = 0;
+      for (let i = 0; i < particleCount; i += 1) {
+        particles.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          vx: (Math.random() - 0.5) * 0.24,
+          vy: (Math.random() - 0.5) * 0.24
         });
-      });
-    
-
-    const projects={
-      "The Rig":[
-        'A networked co-op shooter made using unreal engine - 5 C++ and Blueprints',
-        'Lightweight networked physics solution for ragdolling',
-        'Handled all coding for AI, animation, gameplay, networking, physics, GAS'
-      ],
-      "Project TwinDragon":[
-        'A networked co-op survivor-like in UE5',
-        'Created custom rollback netcode inside of Unreal',
-        '300+ actor performance optimizations (ISM, Vertex animations, aggregate ticking, spatial-grid logic)',
-        'Custom editor enhancements for FixedPoint library'
-      ],
-      "Dreambound":[
-        'A co-op asymmetric puzzle game',
-        'Released on Itch.io! https://sheebslol.itch.io/dreambound',
-        'Created NAT traversal system with a launched AWS service and custom Unreal NetDriver'
-      ]
+      }
     }
 
-    function showProject(key){
-      const list=projects[key]||['Add your bullet points here'];
-      document.getElementById('projectDetails').innerHTML=
-        `<h3>${key.toUpperCase()}</h3><ul>${list.map(x=>`<li>${x}</li>`).join('')}</ul>`;
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = "rgba(103, 214, 255, 0.45)";
+      for (const p of particles) {
+        p.x += p.vx;
+        p.y += p.vy;
+        if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+        if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 1.4, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      requestAnimationFrame(animate);
     }
-    
-    const canvas=document.getElementById('bg');
-    const ctx=canvas.getContext('2d');
-    let particles=[];
-    function resize(){canvas.width=window.innerWidth;canvas.height=window.innerHeight}
-    window.onresize=resize;resize();
-    for(let i=0;i<80;i++)particles.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,vx:(Math.random()-0.5)*0.3,vy:(Math.random()-0.5)*0.3});
-    function loop(){
-      ctx.clearRect(0,0,canvas.width,canvas.height);
-      ctx.fillStyle='rgba(56,189,248,0.5)';
-      particles.forEach(p=>{
-        p.x+=p.vx;p.y+=p.vy;
-        if(p.x<0||p.x>canvas.width)p.vx*=-1;
-        if(p.y<0||p.y>canvas.height)p.vy*=-1;
-        ctx.beginPath();ctx.arc(p.x,p.y,1.5,0,Math.PI*2);ctx.fill();
-      });
-      requestAnimationFrame(loop);
-    }
-    loop();
+
+    resizeCanvas();
+    seedParticles();
+    window.addEventListener("resize", () => {
+      resizeCanvas();
+      seedParticles();
+    });
+    animate();
   </script>
 </body>
 </html>
